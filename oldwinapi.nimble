@@ -1,6 +1,6 @@
 [Package]
 name          = "oldwinapi"
-version       = "1.0.0"
+version       = "2.0.0"
 author        = "Andreas Rumpf"
 description   = "Old Win API library for Nim"
 license       = "LGPL"
