@@ -12,6 +12,10 @@
 
 {.deadCodeElim: on.}
 {.push gcsafe.}
+
+when not declared(UncheckedArray):
+  type UncheckedArray {.unchecked.} [T] = array[0..0, T]
+
 type
   WideChar* = uint16
   PWideChar* = ptr uint16
@@ -42,10 +46,10 @@ type  # WinNT.h -- Defines the 32-Bit Windows types and constants
 type  # BaseTsd.h -- Type definitions for the basic sized types
       # Give here only the bare minimum, to be expanded as needs arise
   LONG32* = int32
-  ULONG32* = int32
+  ULONG32* = uint32
   DWORD32* = int32
   LONG64* = int64
-  ULONG64* = int64
+  ULONG64* = uint64
   DWORD64* = int64
   PDWORD64* = ptr DWORD64
   # int32 on Win32, int64 on Win64
@@ -62,13 +66,13 @@ type  # BaseTsd.h -- Type definitions for the basic sized types
 
 type  # WinDef.h -- Basic Windows Type Definitions
   # BaseTypes
-  WINUINT* = int32
-  ULONG* = int
-  PULONG* = ptr int
-  USHORT* = int16
-  PUSHORT* = ptr int16
-  UCHAR* = int8
-  PUCHAR* = ptr int8
+  WINUINT* = uint32
+  ULONG* = uint
+  PULONG* = ptr uint
+  USHORT* = uint16
+  PUSHORT* = ptr uint16
+  UCHAR* = uint8
+  PUCHAR* = ptr uint8
   PSZ* = cstring
 
   DWORD* = int32
@@ -91,7 +95,7 @@ type  # WinDef.h -- Basic Windows Type Definitions
   LPCVOID* = pointer
 
   # INT* = int  # Cannot work and not necessary anyway
-  PUINT* = ptr int
+  PUINT* = ptr uint
 
   WPARAM* = LONG_PTR
   LPARAM* = LONG_PTR
@@ -245,7 +249,7 @@ type
   LONGLONG* = int64
   PLONGLONG* = ptr LONGLONG
   LPLONGLONG* = ptr LONGLONG
-  ULONGLONG* = int64          # used in AMD64 CONTEXT
+  ULONGLONG* = uint64          # used in AMD64 CONTEXT
   PULONGLONG* = ptr ULONGLONG #
   DWORDLONG* = int64          # was unsigned long
   PDWORDLONG* = ptr DWORDLONG
@@ -7030,7 +7034,7 @@ type
   PRGBTRIPLE* = ptr RGBTRIPLE
   BITMAPCOREINFO* {.final, pure.} = object
     bmciHeader*: BITMAPCOREHEADER
-    bmciColors*: array[0..0, RGBTRIPLE]
+    bmciColors*: UncheckedArray[RGBTRIPLE]
 
   PBITMAPCOREINFO* = ptr BITMAPCOREINFO
   LPBITMAPCOREINFO* = ptr BITMAPCOREINFO
@@ -7055,16 +7059,16 @@ type
   TBITMAPINFOHEADER* = BITMAPINFOHEADER
   PBITMAPINFOHEADER* = ptr BITMAPINFOHEADER
   RGBQUAD* {.final, pure.} = object
-    rgbBlue*: int8
-    rgbGreen*: int8
-    rgbRed*: int8
-    rgbReserved*: int8
+    rgbBlue*: byte
+    rgbGreen*: byte
+    rgbRed*: byte
+    rgbReserved*: byte
 
   TRGBQUAD* = RGBQUAD
   PRGBQUAD* = ptr RGBQUAD
   BITMAPINFO* {.final, pure.} = object
     bmiHeader*: BITMAPINFOHEADER
-    bmiColors*: array[0..0, RGBQUAD]
+    bmiColors*: UncheckedArray[RGBQUAD]
 
   LPBITMAPINFO* = ptr BITMAPINFO
   PBITMAPINFO* = ptr BITMAPINFO
@@ -7129,7 +7133,7 @@ type
   PBLOB* = ptr BLOB
   SHITEMID* {.final, pure.} = object
     cb*: USHORT
-    abID*: array[0..0, int8]
+    abID*: UncheckedArray[int8]
 
   LPSHITEMID* = ptr SHITEMID
   LPCSHITEMID* = ptr SHITEMID
@@ -7203,7 +7207,7 @@ type
     dwSelection*: DWORD
     dwPageStart*: DWORD
     dwPageSize*: DWORD
-    dwOffset*: array[0..0, DWORD]
+    dwOffset*: UncheckedArray[DWORD]
 
   LPCANDIDATELIST* = ptr CANDIDATELIST
   TCANDIDATELIST* = CANDIDATELIST
@@ -7360,7 +7364,7 @@ type
   PCHOOSEFONT* = ptr TCHOOSEFONT
   CIDA* {.final, pure.} = object
     cidl*: WINUINT
-    aoffset*: array[0..0, WINUINT]
+    aoffset*: UncheckedArray[WINUINT]
 
   LPIDA* = ptr CIDA
   TIDA* = CIDA
@@ -7498,7 +7502,7 @@ type
     dwProviderSubType*: DWORD
     dwProviderOffset*: DWORD
     dwProviderSize*: DWORD
-    wcProviderData*: array[0..0, WCHAR]
+    wcProviderData*: UncheckedArray[WCHAR]
 
   LPCOMMCONFIG* = ptr COMMCONFIG
   TCOMMCONFIG* = COMMCONFIG
@@ -7521,7 +7525,7 @@ type
     dwCurrentRxQueue*: DWORD
     dwProvSpec1*: DWORD
     dwProvSpec2*: DWORD
-    wcProvChar*: array[0..0, WCHAR]
+    wcProvChar*: UncheckedArray[WCHAR]
 
   LPCOMMPROP* = ptr COMMPROP
   TCOMMPROP* = COMMPROP
@@ -8107,7 +8111,7 @@ type
   DDEDATA* {.final, pure.} = object
     flag0*: int16
     cfFormat*: SHORT
-    Value*: array[0..0, int8]
+    Value*: UncheckedArray[int8]
 
   PDDEDATA* = ptr DDEDATA
 
@@ -8171,7 +8175,7 @@ type
   DDEPOKE* {.final, pure.} = object
     flag0*: int16
     cfFormat*: SHORT
-    Value*: array[0..0, int8]
+    Value*: UncheckedArray[int8]
 
   TDDEPOKE* = DDEPOKE
   PDDEPOKE* = ptr DDEPOKE
@@ -8194,7 +8198,7 @@ type
   DDEUP* {.final, pure.} = object
     flag0*: int16
     cfFormat*: SHORT
-    rgb*: array[0..0, int8]
+    rgb*: UncheckedArray[int8]
 
   TDDEUP* = DDEUP
   PDDEUP* = ptr DDEUP
@@ -8357,14 +8361,13 @@ type
     dbcp_size*: ULONG
     dbcp_devicetype*: ULONG
     dbcp_reserved*: ULONG
-    dbcp_name*: array[0..0, char]
+    dbcp_name*: UncheckedArray[char]
 
   PDEV_BROADCAST_PORT* = ptr DEV_BROADCAST_PORT
   TDEVBROADCASTPORT* = DEV_BROADCAST_PORT
   DEV_BROADCAST_USERDEFINED* {.final, pure.} = object
     dbud_dbh*: DEV_BROADCAST_HDR
-    dbud_szName*: array[0..0, char]
-    dbud_rgbUserDefined*: array[0..0, int8]
+    dbud_szName*: UncheckedArray[char]
 
   TDEVBROADCASTUSERDEFINED* = DEV_BROADCAST_USERDEFINED
   PDEVBROADCASTUSERDEFINED* = ptr DEV_BROADCAST_USERDEFINED
@@ -8617,7 +8620,7 @@ type
   DRIVE_LAYOUT_INFORMATION* {.final, pure.} = object
     PartitionCount*: DWORD
     Signature*: DWORD
-    PartitionEntry*: array[0..0, PARTITION_INFORMATION]
+    PartitionEntry*: UncheckedArray[PARTITION_INFORMATION]
 
   TDRIVELAYOUTINFORMATION* = DRIVE_LAYOUT_INFORMATION
   PDRIVELAYOUTINFORMATION* = ptr DRIVE_LAYOUT_INFORMATION
@@ -8792,7 +8795,7 @@ type
   LOGPALETTE* {.final, pure.} = object
     palVersion*: int16
     palNumEntries*: int16
-    palPalEntry*: array[0..0, PALETTEENTRY]
+    palPalEntry*: UncheckedArray[PALETTEENTRY]
 
   LPLOGPALETTE* = ptr LOGPALETTE
   NPLOGPALETTE* = ptr LOGPALETTE
@@ -8887,7 +8890,7 @@ type
     elpColor*: COLORREF
     elpHatch*: LONG
     elpNumEntries*: DWORD
-    elpStyleEntry*: array[0..0, DWORD]
+    elpStyleEntry*: UncheckedArray[DWORD]
 
   TEXTLOGPEN* = EXTLOGPEN
   PEXTLOGPEN* = ptr EXTLOGPEN
@@ -8914,7 +8917,7 @@ type
     emr*: EMR
     cbRgnData*: DWORD
     iMode*: DWORD
-    RgnData*: array[0..0, int8]
+    RgnData*: UncheckedArray[int8]
 
   TEMREXTSELECTCLIPRGN* = EMREXTSELECTCLIPRGN
   PEMREXTSELECTCLIPRGN* = ptr EMREXTSELECTCLIPRGN
@@ -8958,7 +8961,7 @@ type
     rclBounds*: RECTL
     cbRgnData*: DWORD
     ihBrush*: DWORD
-    RgnData*: array[0..0, int8]
+    RgnData*: UncheckedArray[int8]
 
   TEMRFILLRGN* = EMRFILLRGN
   PEMRFILLRGN* = ptr EMRFILLRGN
@@ -8977,14 +8980,14 @@ type
     cbRgnData*: DWORD
     ihBrush*: DWORD
     szlStroke*: SIZEL
-    RgnData*: array[0..0, int8]
+    RgnData*: UncheckedArray[int8]
 
   TEMRFRAMERGN* = EMRFRAMERGN
   PEMRFRAMERGN* = ptr EMRFRAMERGN
   EMRGDICOMMENT* {.final, pure.} = object
     emr*: EMR
     cbData*: DWORD
-    Data*: array[0..0, int8]
+    Data*: UncheckedArray[int8]
 
   TEMRGDICOMMENT* = EMRGDICOMMENT
   PEMRGDICOMMENT* = ptr EMRGDICOMMENT
@@ -8992,7 +8995,7 @@ type
     emr*: EMR
     rclBounds*: RECTL
     cbRgnData*: DWORD
-    RgnData*: array[0..0, int8]
+    RgnData*: UncheckedArray[int8]
 
   TEMRINVERTRGN* = EMRINVERTRGN
   PEMRINVERTRGN* = ptr EMRINVERTRGN
@@ -9077,8 +9080,8 @@ type
     emr*: EMR
     rclBounds*: RECTL
     cptl*: DWORD
-    aptl*: array[0..0, POINTL]
-    abTypes*: array[0..0, int8]
+    aptl*: UncheckedArray[POINTL]
+    abTypes*: UncheckedArray[int8]
 
   TEMRPOLYDRAW* = EMRPOLYDRAW
   PEMRPOLYDRAW* = ptr EMRPOLYDRAW
@@ -9086,8 +9089,8 @@ type
     emr*: EMR
     rclBounds*: RECTL
     cpts*: DWORD
-    apts*: array[0..0, POINTS]
-    abTypes*: array[0..0, int8]
+    apts*: UncheckedArray[POINTS]
+    abTypes*: UncheckedArray[int8]
 
   TEMRPOLYDRAW16* = EMRPOLYDRAW16
   PEMRPOLYDRAW16* = ptr EMRPOLYDRAW16
@@ -9095,7 +9098,7 @@ type
     emr*: EMR
     rclBounds*: RECTL
     cptl*: DWORD
-    aptl*: array[0..0, POINTL]
+    aptl*: UncheckedArray[POINTL]
 
   TEMRPOLYLINE* = EMRPOLYLINE
   PEMRPOLYLINE* = ptr EMRPOLYLINE
@@ -9115,7 +9118,7 @@ type
     emr*: EMR
     rclBounds*: RECTL
     cpts*: DWORD
-    apts*: array[0..0, POINTL]
+    apts*: UncheckedArray[POINTL]
 
   TEMRPOLYLINE16* = EMRPOLYLINE16
   PEMRPOLYLINE16* = ptr EMRPOLYLINE16
@@ -9136,8 +9139,8 @@ type
     rclBounds*: RECTL
     nPolys*: DWORD
     cptl*: DWORD
-    aPolyCounts*: array[0..0, DWORD]
-    aptl*: array[0..0, POINTL]
+    aPolyCounts*: UncheckedArray[DWORD]
+    aptl*: UncheckedArray[POINTL]
 
   TEMRPOLYPOLYLINE* = EMRPOLYPOLYLINE
   PEMRPOLYPOLYLINE* = ptr EMRPOLYPOLYLINE
@@ -9149,8 +9152,8 @@ type
     rclBounds*: RECTL
     nPolys*: DWORD
     cpts*: DWORD
-    aPolyCounts*: array[0..0, DWORD]
-    apts*: array[0..0, POINTS]
+    aPolyCounts*: UncheckedArray[DWORD]
+    apts*: UncheckedArray[POINTS]
 
   TEMRPOLYPOLYLINE16* = EMRPOLYPOLYLINE16
   PEMRPOLYPOLYLINE16* = ptr EMRPOLYPOLYLINE16
@@ -9164,7 +9167,7 @@ type
     exScale*: float32
     eyScale*: float32
     cStrings*: LONG
-    aemrtext*: array[0..0, EMRTEXT]
+    aemrtext*: UncheckedArray[EMRTEXT]
 
   TEMRPOLYTEXTOUTA* = EMRPOLYTEXTOUTA
   PEMRPOLYTEXTOUTA* = ptr EMRPOLYTEXTOUTA
@@ -9285,7 +9288,7 @@ type
     ihPal*: DWORD
     iStart*: DWORD
     cEntries*: DWORD
-    aPalEntries*: array[0..0, PALETTEENTRY]
+    aPalEntries*: UncheckedArray[PALETTEENTRY]
 
   TEMRSETPALETTEENTRIES* = EMRSETPALETTEENTRIES
   PEMRSETPALETTEENTRIES* = ptr EMRSETPALETTEENTRIES
@@ -9477,7 +9480,7 @@ type
   TENHMETARECORD* {.final, pure.} = object
     iType*: DWORD
     nSize*: DWORD
-    dParm*: array[0..0, DWORD]
+    dParm*: UncheckedArray[DWORD]
 
   LPENHMETARECORD* = ptr TENHMETARECORD
   PENHMETARECORD* = ptr TENHMETARECORD
@@ -9724,7 +9727,7 @@ type
   TGLYPHMETRICS* = GLYPHMETRICS
   PGLYPHMETRICS* = ptr GLYPHMETRICS
   HANDLETABLE* {.final, pure.} = object
-    objectHandle*: array[0..0, HGDIOBJ]
+    objectHandle*: UncheckedArray[HGDIOBJ]
 
   THANDLETABLE* = HANDLETABLE
   LPHANDLETABLE* = ptr HANDLETABLE
@@ -10165,7 +10168,7 @@ type
     dwState*: DWORD
     uId*: WINUINT
     bResInfo*: int8
-    szText*: array[0..0, WCHAR]
+    szText*: UncheckedArray[WCHAR]
     dwHelpId*: DWORD
 
   TMENUEXTEMPLATEITEM* = MENUEX_TEMPLATE_ITEM
@@ -10205,7 +10208,7 @@ type
   MENUITEMTEMPLATE* {.final, pure.} = object
     mtOption*: int16
     mtID*: int16
-    mtString*: array[0..0, WCHAR]
+    mtString*: UncheckedArray[WCHAR]
 
   TMENUITEMTEMPLATE* = MENUITEMTEMPLATE
   PMENUITEMTEMPLATE* = ptr MENUITEMTEMPLATE
@@ -10242,7 +10245,7 @@ type
   METARECORD* {.final, pure.} = object
     rdSize*: DWORD
     rdFunction*: int16
-    rdParm*: array[0..0, int16]
+    rdParm*: UncheckedArray[int16]
 
   LPMETARECORD* = ptr METARECORD
   TMETARECORD* = METARECORD
@@ -10286,7 +10289,7 @@ type
     dwModemOptions*: DWORD
     dwMaxDTERate*: DWORD
     dwMaxDCERate*: DWORD
-    abVariablePortion*: array[0..0, int8]
+    abVariablePortion*: UncheckedArray[int8]
 
   LPMODEMDEVCAPS* = ptr MODEMDEVCAPS
   TMODEMDEVCAPS* = MODEMDEVCAPS
@@ -10303,7 +10306,7 @@ type
     dwPreferredModemOptions*: DWORD
     dwNegotiatedModemOptions*: DWORD
     dwNegotiatedDCERate*: DWORD
-    abVariablePortion*: array[0..0, int8]
+    abVariablePortion*: UncheckedArray[int8]
 
   LPMODEMSETTINGS* = ptr MODEMSETTINGS
   TMODEMSETTINGS* = MODEMSETTINGS
@@ -10353,7 +10356,7 @@ type
     dwTime*: DWORD
     hsz*: HSZ
     hTask*: HANDLE
-    str*: array[0..0, TCHAR]
+    str*: UncheckedArray[TCHAR]
 
   TMONHSZSTRUCT* = MONHSZSTRUCT
   PMONHSZSTRUCT* = ptr MONHSZSTRUCT
@@ -10446,7 +10449,7 @@ type
   MULTIKEYHELP* {.final, pure.} = object
     mkSize*: DWORD
     mkKeylist*: TCHAR
-    szKeyphrase*: array[0..0, TCHAR]
+    szKeyphrase*: UncheckedArray[TCHAR]
 
   TMULTIKEYHELP* = MULTIKEYHELP
   PMULTIKEYHELP* = ptr MULTIKEYHELP
@@ -10634,7 +10637,7 @@ type
   PSERVICEADDRESS* = ptr SERVICE_ADDRESS
   SERVICE_ADDRESSES* {.final, pure.} = object
     dwAddressCount*: DWORD
-    Addresses*: array[0..0, SERVICE_ADDRESS]
+    Addresses*: UncheckedArray[SERVICE_ADDRESS]
 
   LPSERVICE_ADDRESSES* = ptr SERVICE_ADDRESSES
   TSERVICEADDRESSES* = SERVICE_ADDRESSES
@@ -11110,7 +11113,7 @@ type
     Version*: DWORD
     Flags*: DWORD
     Count*: DWORD
-    aData*: array[0..0, PRINTER_NOTIFY_INFO_DATA]
+    aData*: UncheckedArray[PRINTER_NOTIFY_INFO_DATA]
 
   TPRINTERNOTIFYINFO* = PRINTER_NOTIFY_INFO
   PPRINTERNOTIFYINFO* = ptr PRINTER_NOTIFY_INFO
@@ -11354,7 +11357,7 @@ type
   REASSIGN_BLOCKS* {.final, pure.} = object
     Reserved*: int16
     Count*: int16
-    BlockNumber*: array[0..0, DWORD]
+    BlockNumber*: UncheckedArray[DWORD]
 
   TREASSIGNBLOCKS* = REASSIGN_BLOCKS
   PREASSIGNBLOCKS* = ptr REASSIGN_BLOCKS
@@ -11389,7 +11392,7 @@ type
   PRGNDATAHEADER* = ptr RGNDATAHEADER
   RGNDATA* {.final, pure.} = object
     rdh*: RGNDATAHEADER
-    Buffer*: array[0..0, char]
+    Buffer*: UncheckedArray[char]
 
   LPRGNDATA* = ptr RGNDATA
   TRGNDATA* = RGNDATA
@@ -11455,7 +11458,7 @@ type
   SERVICE_TYPE_INFO_ABS* {.final, pure.} = object
     lpTypeName*: LPTSTR
     dwValueCount*: DWORD
-    Values*: array[0..0, SERVICE_TYPE_VALUE_ABS]
+    Values*: UncheckedArray[SERVICE_TYPE_VALUE_ABS]
 
   TSERVICETYPEINFOABS* = SERVICE_TYPE_INFO_ABS
   PSERVICETYPEINFOABS* = ptr SERVICE_TYPE_INFO_ABS
@@ -11902,7 +11905,7 @@ type
   TTPOLYCURVE* {.final, pure.} = object
     wType*: int16
     cpfx*: int16
-    apfx*: array[0..0, POINTFX]
+    apfx*: UncheckedArray[POINTFX]
 
   LPTTPOLYCURVE* = ptr TTPOLYCURVE
   TTTPOLYCURVE* = TTPOLYCURVE
@@ -20904,7 +20907,7 @@ type
     dwLength*: DWord
     wRevision*: int16
     wCertificateType*: int16
-    bCertificate*: array[0..0, int8]
+    bCertificate*: UncheckedArray[int8]
 
   TWinCertificate* = WIN_CERTIFICATE
   PWinCertificate* = ptr TWinCertificate
@@ -20971,9 +20974,9 @@ const                         # Severity values
                             #    PRIMARYLANGID - extract primary language id from a language id.
                             #    SUBLANGID     - extract sublanguage id from a language id.
                             #
-proc MAKELANGID*(PrimaryLang, SubLang: USHORT): int16
-proc PRIMARYLANGID*(LangId: int16): int16
-proc SUBLANGID*(LangId: int16): int16
+proc MAKELANGID*(PrimaryLang, SubLang: USHORT): WORD
+proc PRIMARYLANGID*(LangId: int16): WORD
+proc SUBLANGID*(LangId: int16): WORD
 
   #
   #  A locale ID is a 32 bit value which is the combination of a
@@ -23889,13 +23892,13 @@ proc HResultFromWin32(x: int32): HRESULT =
 proc HResultFromNT(x: int32): HRESULT =
   result = x or int32(FACILITY_NT_BIT)
 
-proc MAKELANGID(PrimaryLang, SubLang: USHORT): int16 =
-  result = (SubLang shl 10'i16) or PrimaryLang
+proc MAKELANGID(PrimaryLang, SubLang: USHORT): WORD =
+  result = WORD((SubLang shl 10'i16) or PrimaryLang)
 
-proc PRIMARYLANGID(LangId: int16): int16 =
+proc PRIMARYLANGID(LangId: int16): WORD =
   result = LangId and 0x000003FF'i16
 
-proc SUBLANGID(LangId: int16): int16 =
+proc SUBLANGID(LangId: int16): WORD =
   result = LangId shr 10'i16
 
 proc MAKELCID(LangId, SortId: int16): DWORD =
@@ -23904,19 +23907,19 @@ proc MAKELCID(LangId, SortId: int16): DWORD =
 proc MAKESORTLCID(LangId, SortId, SortVersion: int16): DWORD =
   result = MAKELCID(LangId, SortId) or (SortVersion shl 20'i32)
 
-proc LANGIDFROMLCID(LocaleId: LCID): int16 =
+proc LANGIDFROMLCID(LocaleId: LCID): WORD =
   result = toU16(LocaleId)
 
-proc SORTIDFROMLCID(LocaleId: LCID): int16 =
+proc SORTIDFROMLCID(LocaleId: LCID): WORD =
   result = toU16((DWORD(LocaleId) shr 16) and 0x0000000F)
 
-proc SORTVERSIONFROMLCID(LocaleId: LCID): int16 =
+proc SORTVERSIONFROMLCID(LocaleId: LCID): WORD =
   result = toU16((DWORD(LocaleId) shr 20) and 0x0000000F)
 
-proc LANG_SYSTEM_DEFAULT(): int16 =
+proc LANG_SYSTEM_DEFAULT(): WORD =
   result = toU16(MAKELANGID(toU16(LANG_NEUTRAL), SUBLANG_SYS_DEFAULT))
 
-proc LANG_USER_DEFAULT(): int16 =
+proc LANG_USER_DEFAULT(): WORD =
   result = toU16(MAKELANGID(toU16(LANG_NEUTRAL), SUBLANG_DEFAULT))
 
 proc LOCALE_NEUTRAL(): DWORD =
