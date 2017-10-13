@@ -7891,7 +7891,7 @@ else:
   # dummy CONTEXT so that it compiles:
   type
     CONTEXT* {.final, pure.} = object
-      data: array [0..255, float64]
+      data: array[0..255, float64]
 
 type
   LPCONTEXT* = ptr CONTEXT
@@ -10151,7 +10151,7 @@ type
     D1*: int32
     D2*: int16
     D3*: int16
-    D4*: array [0..7, int8]
+    D4*: array[0..7, int8]
 
   LPMEMORYSTATUS* = ptr MEMORYSTATUS
   TMEMORYSTATUS* = MEMORYSTATUS
