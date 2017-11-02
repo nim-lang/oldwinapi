@@ -253,7 +253,7 @@ type
   PULONGLONG* = ptr ULONGLONG #
   DWORDLONG* = int64          # was unsigned long
   PDWORDLONG* = ptr DWORDLONG
-  HRESULT* = int
+  HRESULT* = int32
   PHRESULT* = ptr HRESULT
   HCONV* = HANDLE
   HCONVLIST* = HANDLE
