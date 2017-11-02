@@ -23872,13 +23872,13 @@ proc IsError(Status: HRESULT): WINBOOL =
   result = ord((int(Status) shr 31) == SEVERITY_ERROR)
 
 proc HResultCode(hr: HRESULT): int32 =
-  result = hr and 0x0000FFFF'i32
+  result = hr.int32 and 0x0000FFFF'i32
 
 proc HResultFacility(hr: HRESULT): int32 =
-  result = (hr shr 16'i32) and 0x00001FFF'i32
+  result = (hr.int32 shr 16'i32) and 0x00001FFF'i32
 
 proc HResultSeverity(hr: HRESULT): int32 =
-  result = (hr shr 31'i32) and 0x00000001'i32
+  result = (hr.int32 shr 31'i32) and 0x00000001'i32
 
 proc MakeResult(p1, p2, mask: int32): HRESULT =
   result = (p1 shl 31'i32) or (p2 shl 16'i32) or mask
@@ -23929,3 +23929,4 @@ proc LOCALE_INVARIANT(): DWORD =
   result = MAKELCID(MAKELANGID(toU16(LANG_INVARIANT), SUBLANG_NEUTRAL), SORT_DEFAULT)
 
 {.pop.}
+
