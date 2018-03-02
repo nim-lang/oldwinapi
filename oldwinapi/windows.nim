@@ -22902,7 +22902,7 @@ proc GET_WM_HSCROLL_POS(w, L: int32): int32 =
 
 proc GET_WM_MDIACTIVATE_FACTIVATE(h, a, b: int32): int32 =
   # return type might be wrong
-  result = ord(b == h)
+  result = ord(b == h).int32
 
 proc GET_WM_MDIACTIVATE_HWNDACTIVATE(a, b: int32): HWND =
   result = HWND(b)
@@ -23869,7 +23869,7 @@ proc Failed(Status: HRESULT): WINBOOL =
   result = (Status and 0x80000000).WinBool
 
 proc IsError(Status: HRESULT): WINBOOL =
-  result = ord((int(Status) shr 31) == SEVERITY_ERROR)
+  result = ord((int(Status) shr 31) == SEVERITY_ERROR).int32
 
 proc HResultCode(hr: HRESULT): int32 =
   result = hr.int32 and 0x0000FFFF'i32
